@@ -68,6 +68,15 @@ class ShellEmulator:
 
         return dir_contents
 
+    def find_file_by_path(self, path):
+        if not path.startswith('/'):
+            path = self.current_dir + path
+
+        for p in self.files_data.keys():
+            if path == p:
+                return p
+        else:
+            return -1
 
     def ls(self, path=None):
         """Реализация функции ls - вывод директорий и файлов, хранящихся в текущей директории
@@ -95,6 +104,35 @@ class ShellEmulator:
         else:
             print(f"bash: cd: {path}: No such file or directory")
 
+    def tail(self, path):
+        key = self.find_file_by_path(path)
+        if key != -1:
+            data = self.files_data[key].strip().split('\n')[::-1][:10]
+
+            for elem in data[::-1]:
+                print(elem)
+
+        else:
+            print(f"File not found: {path}")
+
+    def uniq(self, path):
+        key = self.find_file_by_path(path)
+        if key != -1:
+            data = []
+            for elem in self.files_data[key].strip().split('\n'):
+                if len(data) == 0: data.append(elem)
+
+                if data[-1] == elem:
+                    continue
+                else:
+                    data.append(elem)
+
+            for elem in data:
+                print(elem)
+
+        else:
+            print(f"File not found: {path}")
+
     def exit(self):
         """Завершает работу эмулятора и записывает логи"""
         print("Выход из эмулятора оболочки.")
@@ -121,6 +159,12 @@ class ShellEmulator:
                     self.current_dir = "/"
                 else:
                     self.cd(args[1])
+
+            elif command == "tail":
+                self.tail(args[1])
+
+            elif command == "uniq":
+                self.uniq(args[1])
 
             elif command == "exit":
                 self.exit()
