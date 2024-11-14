@@ -2,7 +2,7 @@ import argparse
 import zipfile
 
 
-class ShellEmulator:
+class VirtualShellEmulator:
     def __init__(self, username, fs_path):
         self.username = username
         self.fs_path = fs_path  # путь к файловой системе
@@ -18,7 +18,7 @@ class ShellEmulator:
                 if not filename.endswith('/'):  # дошли до папки
                     self.files_data["/" + filename] = zip_file.read(filename).decode('utf-8')
 
-                self.vfs.append('/'+filename)
+                self.vfs.append('/' + filename)
 
     def get_absolute_path(self, path):
         """Преобразует путь в абсолютный относительно текущей директории"""
@@ -175,8 +175,8 @@ class ShellEmulator:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Эмулятор оболочки")
     parser.add_argument("--username", required=True, help="Имя пользователя для оболочки")
-    parser.add_argument("--fs", required=True, help="Путь к виртуальной файловой системе (файл zip)")
+    parser.add_argument("--vfs", required=True, help="Путь к виртуальной файловой системе (файл zip)")
     args = parser.parse_args()
 
-    emulator = ShellEmulator(args.username, args.fs)
+    emulator = VirtualShellEmulator(args.username, args.fs)
     emulator.run()
