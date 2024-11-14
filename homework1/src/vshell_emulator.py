@@ -12,7 +12,7 @@ class VirtualShellEmulator:
         self.load_filesystem()  # вызываем метод для загрузки файловой системы
 
     def load_filesystem(self):
-        """Загружает виртуальную файловую систему (архив tar)"""
+        """Загружает виртуальную файловую систему (архив zip)"""
         with zipfile.ZipFile(self.fs_path, 'r') as zip_file:
             for filename in zip_file.namelist():
                 if not filename.endswith('/'):  # дошли до папки
@@ -97,7 +97,6 @@ class VirtualShellEmulator:
     def cd(self, path):
         """Меняет текущую директорию"""
         absolute_path = self.get_absolute_path(path)
-        print(absolute_path)
         if absolute_path in self.vfs or absolute_path == '/':
             self.current_dir = absolute_path
             print(f"Changed directory to {self.current_dir}")
@@ -178,5 +177,5 @@ if __name__ == "__main__":
     parser.add_argument("--vfs", required=True, help="Путь к виртуальной файловой системе (файл zip)")
     args = parser.parse_args()
 
-    emulator = VirtualShellEmulator(args.username, args.fs)
+    emulator = VirtualShellEmulator(args.username, args.vfs)
     emulator.run()
