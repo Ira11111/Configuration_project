@@ -149,7 +149,7 @@ zip.
 
 #### `ls(self, path=None)`
 ```Python
-    def ls(self, path=None):
+    def ls(self, path=None) -> str:
         if path is None:
             p = self.current_dir
         else:
@@ -157,11 +157,11 @@ zip.
 
         if len(p) > 0:
             contents = self.get_dir_contents(p)
-
-            for elem in contents:
-                print(elem)
+            ans = "\t".join(contents)
         else:
-            print(f"bash: ls: {path}: No such file or directory")
+            ans = f"bash: ls: {path}: No such file or directory"
+
+        return ans
 ```
 - **Описание**: Реализация функции ls - вывод директорий и файлов, хранящихся в текущей директории
                 или директории по заданному пути
@@ -173,13 +173,15 @@ zip.
 
 #### `cd(self, path)`
 ```Python
-    def cd(self, path):
+    def cd(self, path) -> str:
         absolute_path = self.get_absolute_path(path)
         if absolute_path in self.vfs or absolute_path == '/':
             self.current_dir = absolute_path
-            print(f"Changed directory to {self.current_dir}")
+            ans = f"Changed directory to {self.current_dir}"
         else:
-            print(f"bash: cd: {path}: No such file or directory")
+            ans = f"bash: cd: {path}: No such file or directory"
+
+        return ans
 ```
 - **Описание**: Меняет текущую директорию
 - **Параметры**:
@@ -189,16 +191,14 @@ zip.
 
 #### `tail(self, path)`
 ```Python
-    def tail(self, path):
+    def tail(self, path) -> str:
         key = self.find_file_by_path(path)
         if key != -1:
             data = self.files_data[key].strip().split('\n')[::-1][:10]
-
-            for elem in data[::-1]:
-                print(elem)
-
+            ans = "\n".join(data[::-1])
         else:
-            print(f"File not found: {path}")
+            ans = f"File not found: {path}"
+        return ans
 ```
 - **Описание**: Реализация команды tail - выводит последние 10 строк файла
 - **Параметры**:
@@ -208,7 +208,7 @@ zip.
 
 #### `uniq(self, path)`
 ```Python
-    def uniq(self, path):
+    def uniq(self, path) -> str:
         key = self.find_file_by_path(path)
         if key != -1:
             data = []
@@ -219,12 +219,11 @@ zip.
                     continue
                 else:
                     data.append(elem)
-
-            for elem in data:
-                print(elem)
-
+            ans = '\n'.join(data)
         else:
-            print(f"File not found: {path}")
+            ans = f"File not found: {path}"
+
+        return ans
 ```
 - **Описание**: Реализация команды uniq - удаляет идущие подряд одинаковые строки в файле
 - **Параметры**:
@@ -255,21 +254,25 @@ zip.
 
             if command == "ls":
                 if len(args) == 1:
-                    self.ls()
+                    ans = self.ls()
                 else:
-                    self.ls(args[1])
+                    ans = self.ls(args[1])
+                print(ans)
 
             elif command == "cd":
                 if len(args) == 1:
-                    self.current_dir = "/"
+                    ans = self.current_dir = "/"
                 else:
-                    self.cd(args[1])
+                    ans = self.cd(args[1])
+                print(ans)
 
             elif command == "tail":
-                self.tail(args[1])
+                ans = self.tail(args[1])
+                print(ans)
 
             elif command == "uniq":
-                self.uniq(args[1])
+                ans = self.uniq(args[1])
+                print(ans)
 
             elif command == "exit":
                 self.exit()
