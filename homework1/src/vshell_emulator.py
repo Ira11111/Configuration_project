@@ -156,7 +156,7 @@ class VirtualShellEmulator:
 
             elif command == "cd":
                 if len(args) == 1:
-                    ans = self.current_dir = "/"
+                    ans = self.cd('/')
                 else:
                     ans = self.cd(args[1])
                 print(ans)
