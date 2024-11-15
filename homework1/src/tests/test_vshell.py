@@ -8,7 +8,6 @@ class TestVirtualShell(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # cls.emulator = vshell_emulator.VirtualShellEmulator("test_user", "../../config/vfs.zip")
         # создаем тестовую файловую систему
         cls.emulator.vfs = ["/test_users/", "/test_users/data/", "/test_users/test_tail1.txt",
                             "/test_users/test_tail2.txt", "/test_users/test_uniq1.txt", "/test_users/test_uniq2.txt"]
