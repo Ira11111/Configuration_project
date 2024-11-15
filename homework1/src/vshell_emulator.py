@@ -22,6 +22,8 @@ class VirtualShellEmulator:
 
     def get_absolute_path(self, path):
         """Преобразует путь в абсолютный относительно текущей директории"""
+        if path == "/": return '/'
+
         if path == "." or path == "./":
             return self.current_dir
 
@@ -31,7 +33,7 @@ class VirtualShellEmulator:
             return "/" + parent if parent != "/" else "/"
 
         elif path.startswith("/"):
-            return path
+            return '/' + path.strip('/') + '/'
 
         else:
             return self.current_dir + path.strip('/') + '/'
@@ -71,7 +73,7 @@ class VirtualShellEmulator:
 
     def find_file_by_path(self, path):
         if not path.startswith('/'):
-            path = self.current_dir + path
+            path = self.current_dir + path.strip('/')
 
         for p in self.files_data.keys():
             if path == p:
