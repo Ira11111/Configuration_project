@@ -341,10 +341,12 @@ python "src/vshell_emulator.py" --username <имя пользователя> --v
 ---
 
 ## 4. Примеры использования в виде скриншотов
-![img_1.png](images/img_1.png)
-![img_2.png](images/img_2.png)
-![img_3.png](images/img_3.png)
-![img_4.png](images/img_4.png)
+![img_1](https://github.com/user-attachments/assets/01d8e98f-822e-4b78-acff-e7e86aba390a)
+![img_2](https://github.com/user-attachments/assets/0881cf1d-af93-4858-a029-5414c8619c56)
+![img_3](https://github.com/user-attachments/assets/cdfd7a90-6efa-48d7-8e79-89fa17b9f333)
+![img_4](https://github.com/user-attachments/assets/58c1819a-943a-4d97-9fe0-575e4735b006)
+
 
 ## 5. Результаты прогона тестов
-![img.png](images/img.png)
+![img](https://github.com/user-attachments/assets/48bff6ef-f5af-42b8-987a-9fcb0a4e7f99)
+
