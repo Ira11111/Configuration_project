@@ -27,7 +27,8 @@ class VirtualShellEmulator:
 
         elif path == ".." or path == "../":
             parent = "/".join(self.current_dir.strip("/").split("/")[:-1]) + '/'
-            return "/" + parent if parent else "/"
+
+            return "/" + parent if parent != "/" else "/"
 
         elif path.startswith("/"):
             return path
@@ -78,7 +79,7 @@ class VirtualShellEmulator:
         else:
             return -1
 
-    def ls(self, path=None):
+    def ls(self, path=None) -> str:
         """Реализация функции ls - вывод директорий и файлов, хранящихся в текущей директории
          или директории по заданному пути"""
         if path is None:
@@ -88,33 +89,33 @@ class VirtualShellEmulator:
 
         if len(p) > 0:
             contents = self.get_dir_contents(p)
-
-            for elem in contents:
-                print(elem)
+            ans = "\t".join(contents)
         else:
-            print(f"bash: ls: {path}: No such file or directory")
+            ans = f"bash: ls: {path}: No such file or directory"
 
-    def cd(self, path):
+        return ans
+
+    def cd(self, path) -> str:
         """Меняет текущую директорию"""
         absolute_path = self.get_absolute_path(path)
         if absolute_path in self.vfs or absolute_path == '/':
             self.current_dir = absolute_path
-            print(f"Changed directory to {self.current_dir}")
+            ans = f"Changed directory to {self.current_dir}"
         else:
-            print(f"bash: cd: {path}: No such file or directory")
+            ans = f"bash: cd: {absolute_path}: No such file or directory"
 
-    def tail(self, path):
+        return ans
+
+    def tail(self, path) -> str:
         key = self.find_file_by_path(path)
         if key != -1:
             data = self.files_data[key].strip().split('\n')[::-1][:10]
-
-            for elem in data[::-1]:
-                print(elem)
-
+            ans = "\n".join(data[::-1])
         else:
-            print(f"File not found: {path}")
+            ans = f"File not found: {path}"
+        return ans
 
-    def uniq(self, path):
+    def uniq(self, path) -> str:
         key = self.find_file_by_path(path)
         if key != -1:
             data = []
@@ -125,15 +126,14 @@ class VirtualShellEmulator:
                     continue
                 else:
                     data.append(elem)
-
-            for elem in data:
-                print(elem)
-
+            ans = '\n'.join(data)
         else:
-            print(f"File not found: {path}")
+            ans = f"File not found: {path}"
+
+        return ans
 
     def exit(self):
-        """Завершает работу эмулятора и записывает логи"""
+        """Завершает работу эмулятора"""
         print("Выход из эмулятора оболочки.")
         exit(0)
 
@@ -149,21 +149,25 @@ class VirtualShellEmulator:
 
             if command == "ls":
                 if len(args) == 1:
-                    self.ls()
+                    ans = self.ls()
                 else:
-                    self.ls(args[1])
+                    ans = self.ls(args[1])
+                print(ans)
 
             elif command == "cd":
                 if len(args) == 1:
-                    self.current_dir = "/"
+                    ans = self.current_dir = "/"
                 else:
-                    self.cd(args[1])
+                    ans = self.cd(args[1])
+                print(ans)
 
             elif command == "tail":
-                self.tail(args[1])
+                ans = self.tail(args[1])
+                print(ans)
 
             elif command == "uniq":
-                self.uniq(args[1])
+                ans = self.uniq(args[1])
+                print(ans)
 
             elif command == "exit":
                 self.exit()
