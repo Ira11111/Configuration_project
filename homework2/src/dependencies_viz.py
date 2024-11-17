@@ -1,6 +1,6 @@
 from typing import Dict, Optional, Callable, List
 from langchain_core.runnables.graph_mermaid import draw_mermaid_png
-from python_mermaid.diagram import MermaidDiagram, Node, Link
+from python_mermaid.diagram import MermaidDiagram, Node
 import json
 import requests
 from python_mermaid.link import Link
@@ -50,7 +50,7 @@ def is_node_in_list(name: str, nodes: List) -> bool:
     return False
 
 
-def find_node_by_name(name: str, nodes: List) -> bool:
+def find_node_by_name(name: str, nodes: List) -> Node:
     for n in nodes:
         if n.content == name:
             return n
