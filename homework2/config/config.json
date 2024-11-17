@@ -1,0 +1,6 @@
+{
+    "program_path": "/src/dependencies.py",
+    "package_name": "sha",
+    "graph_output_path": "/result/graph.png",
+    "max_depth": 3
+}
