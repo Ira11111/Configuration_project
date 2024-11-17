@@ -86,7 +86,7 @@ def get_graph_png(mermaid_str: str, output_path: str) -> None:
 
 def main():
     # загружаем конфигурационные данные
-    with open("../config/config.json", 'r') as conf_data:
+    with open("config/config.json", 'r') as conf_data:
         data = json.load(conf_data)
 
     dependencies = {}
