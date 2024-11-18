@@ -205,12 +205,12 @@ python src\dependencies_viz.py
 
 ---
 
-## 4. Примеры использования в виде скриншотов
-![picture](https://raw.githubusercontent.com/Ira11111/Configuration_project/de76e86f70e6722d2f48e182c5872ac2712e215f/cong2(1).png)
-![picture](https://raw.githubusercontent.com/Ira11111/Configuration_project/de76e86f70e6722d2f48e182c5872ac2712e215f/conf2(2).png)
-![picture](https://raw.githubusercontent.com/Ira11111/Configuration_project/de76e86f70e6722d2f48e182c5872ac2712e215f/conf2(3).png)
-![picture](https://raw.githubusercontent.com/Ira11111/Configuration_project/de76e86f70e6722d2f48e182c5872ac2712e215f/conf2(4).png)
+## 4. Пример использования в виде скриншотов
+![picture](https://github.com/Ira11111/Configuration_project/blob/images/homework2/cong2(1).jpg)
+![picture](https://github.com/Ira11111/Configuration_project/blob/images/homework2/conf2(2).png)
+![picture](https://github.com/Ira11111/Configuration_project/blob/images/homework2/conf2(3).png)
+![picture](https://github.com/Ira11111/Configuration_project/blob/images/homework2/conf2(4).png)
 
 ## 5. Результаты прогона тестов
-![picture](https://raw.githubusercontent.com/Ira11111/Configuration_project/de76e86f70e6722d2f48e182c5872ac2712e215f/conf2(5).png)
-![picture](https://raw.githubusercontent.com/Ira11111/Configuration_project/de76e86f70e6722d2f48e182c5872ac2712e215f/conf2(6).png)
+![test](https://github.com/Ira11111/Configuration_project/blob/images/homework2/conf2(5).png)
+![test](https://github.com/Ira11111/Configuration_project/blob/images/homework2/conf2(6).png)
