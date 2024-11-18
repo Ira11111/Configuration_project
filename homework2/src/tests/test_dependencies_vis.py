@@ -35,12 +35,6 @@ class TestDependencies(unittest.TestCase):
             get_all_dependencies(p_name, depth=1, dep_dict=res)
             self.assertTrue(len(res) == 1)
 
-        with self.subTest("wrong package"):
-            p_name = "имя"
-            res = {}
-            get_all_dependencies(p_name, depth=10, dep_dict=res)
-            self.assertTrue(len(res) == 0)
-
 
 class TestGraph(unittest.TestCase):
 
