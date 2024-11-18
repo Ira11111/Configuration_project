@@ -50,7 +50,6 @@ class TestGraph(unittest.TestCase):
     def test_get_mermaid_str(self):
         dependencies = {"a": {"b": "version", "c": "version"}, "c": {"d": "version"}, "b": {}}
         mermaid_str = get_mermaid_str(dependencies)
-        print(mermaid_str)
         self.assertIn("title: Dependencies graph", mermaid_str)
         self.assertIn("a ---> b", mermaid_str)
         self.assertIn("a ---> c", mermaid_str)
