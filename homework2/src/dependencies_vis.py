@@ -1,9 +1,8 @@
 from typing import Dict, Optional, Callable, List
 from langchain_core.runnables.graph_mermaid import draw_mermaid_png
-from python_mermaid.diagram import MermaidDiagram, Node
+from python_mermaid.diagram import MermaidDiagram, Node, Link
 import json
 import requests
-from python_mermaid.link import Link
 
 
 def get_dependencies_current(package_name: str) -> Dict:
