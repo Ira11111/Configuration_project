@@ -1,7 +1,4 @@
-import subprocess
-import shlex
+import os
 
 if __name__ == "__main__":
-    cmd = shlex.split("pip install -r requirements.txt")
-    proc = subprocess.Popen(cmd)
-    proc.wait()
+    os.system("pip install -r requirements.txt")
