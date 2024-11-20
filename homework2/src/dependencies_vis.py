@@ -1,9 +1,8 @@
+import os
 from typing import Dict, Optional, Callable, List
 import json
 import requests
 from python_mermaid.diagram import MermaidDiagram, Node, Link
-import subprocess
-import shlex
 
 
 def get_dependencies_current(package_name: str) -> Dict:
@@ -94,12 +93,12 @@ def main():
     mermaid_script = get_mermaid_str(dependencies)
 
     mermaid_path = "src/mermaid.mmd"
+    output_path = data["graph_output_path"]
+
     make_mermaid_file(mermaid_path, mermaid_script)
 
     p_path = data["program_path"]
-    cmd = shlex.split(f"python {p_path} --mf {mermaid_path}")
-    proc = subprocess.Popen(cmd)
-    proc.wait()
+    os.system(f"python {p_path} --mf {mermaid_path} --of {output_path}")
 
     print("Программа выполнилась без ошибок!")
 
