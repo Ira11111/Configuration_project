@@ -1,8 +1,9 @@
 from typing import Dict, Optional, Callable, List
-from langchain_core.runnables.graph_mermaid import draw_mermaid_png
-from python_mermaid.diagram import MermaidDiagram, Node, Link
 import json
 import requests
+from python_mermaid.diagram import MermaidDiagram, Node, Link
+import subprocess
+import shlex
 
 
 def get_dependencies_current(package_name: str) -> Dict:
@@ -77,10 +78,9 @@ def get_mermaid_str(dependencies: Dict) -> str:
     return str(script)
 
 
-def get_graph_png(mermaid_str: str, output_path: str) -> None:
-    """Преобразует строку разметки в изображение
-    """
-    draw_mermaid_png(mermaid_syntax=mermaid_str, output_file_path=output_path)
+def make_mermaid_file(path:str, script_mermaid: str):
+    with open(path, 'w') as file:
+        file.write(script_mermaid)
 
 
 def main():
@@ -92,7 +92,14 @@ def main():
     get_all_dependencies(package_name=data["package_name"], depth=data["max_depth"], dep_dict=dependencies)
 
     mermaid_script = get_mermaid_str(dependencies)
-    get_graph_png(mermaid_str=mermaid_script, output_path=data["graph_output_path"])
+
+    mermaid_path = "src/mermaid.mmd"
+    make_mermaid_file(mermaid_path, mermaid_script)
+
+    p_path = data["program_path"]
+    cmd = shlex.split(f"python {p_path} --mf {mermaid_path}")
+    proc = subprocess.Popen(cmd)
+    proc.wait()
 
     print("Программа выполнилась без ошибок!")
 
