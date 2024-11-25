@@ -5,7 +5,7 @@ import os
 def get_graph_png(mermaid_path: str, output_file: str) -> None:
     """Преобразует строку разметки в изображение
     """
-    os.system(f"mmdc -i {mermaid_path} output -o {output_file}")
+    os.system(f"/usr/local/bin/mmdc -i {mermaid_path} output -o {output_file} --puppeteerConfigFile config/graph_config.json")
 
     if os.path.exists("src/mermaid.mmd"):
         os.remove("src/mermaid.mmd")
