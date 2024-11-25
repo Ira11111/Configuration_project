@@ -22,6 +22,9 @@ class Parser:
         except Exception as e:
             return str(e)
         else:
+            print("+" * 20)
+            print("Текст преобразован!")
+            print("+" * 20)
             return self.make_yaml()
 
     def delete_comments(self):
