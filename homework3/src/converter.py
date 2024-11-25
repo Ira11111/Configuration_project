@@ -13,11 +13,13 @@ class Parser:
         """Основная функция обработки"""
         try:
             self.delete_comments()
-
             self.find_all_constants()
             self.constant_decl()
             self.const_expr()
             self.get_arrays()
+
+            if len(re.findall(r"\S+", self.text)) > 0:
+                raise SyntaxError("В тексте обнаружен неверный синтаксис или значения")
 
         except Exception as e:
             return str(e)
@@ -43,7 +45,7 @@ class Parser:
         if matches2 is not None:
             comments.extend(matches2)
             while len(comments) > 0:
-                s = "REM" + comments.pop(0)
+                s = "REM" + comments.pop(0) + "\n"
                 self.text = self.text.replace(s, "")
 
 
@@ -96,7 +98,6 @@ class Parser:
                 raise NameError("Переменная с таким именем была уже объявлена")
 
 
-
     def validate_values(self, m_string):
         """Метод, который подставляет на место вычисляемых констант значения"""
         array_string = m_string[m_string.index("["):]
@@ -115,7 +116,7 @@ class Parser:
         return array_string
 
     def make_yaml(self):
-        yaml_output = yaml.dump(self.res_dict, sort_keys=False)
+        yaml_output = yaml.dump(self.res_dict, sort_keys=True)
         return yaml_output
 
 
@@ -130,4 +131,4 @@ if __name__ == "__main__":
 
     parser = Parser(intput) # инициализируем парсер
     res = parser.parse() # вызываем метод для обработки текста
-    print(res) # выводи результат в формате yaml
+    print(res) # выводит результат в формате yaml
