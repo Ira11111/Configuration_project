@@ -82,6 +82,15 @@ def make_mermaid_file(path:str, script_mermaid: str):
         file.write(script_mermaid)
 
 
+def get_graph_png(prog_path: str, mermaid_path: str, output_file: str) -> None:
+    """Преобразует строку разметки в изображение
+    """
+    os.system(f"{prog_path} -i {mermaid_path} output -o {output_file} --puppeteerConfigFile config/graph_config.json")
+
+    if os.path.exists("src/mermaid.mmd"):
+        os.remove("src/mermaid.mmd")
+
+
 def main():
     # загружаем конфигурационные данные
     with open("config/config.json", 'r') as conf_data:
@@ -98,7 +107,7 @@ def main():
     make_mermaid_file(mermaid_path, mermaid_script)
 
     p_path = data["program_path"]
-    os.system(f"python {p_path} --mf {mermaid_path} --of {output_path}")
+    get_graph_png(prog_path=p_path, mermaid_path=mermaid_path, output_file=output_path)
 
     print("Программа выполнилась без ошибок!")
 

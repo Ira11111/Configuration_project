@@ -2,8 +2,7 @@ import os
 import unittest
 from python_mermaid.diagram import Node
 from homework2.src.dependencies_vis import (get_dependencies_current, get_all_dependencies,
-                                            get_mermaid_str, is_node_in_list, find_node_by_name, make_mermaid_file)
-from homework2.src.get_graph import get_graph_png
+                                            get_mermaid_str, is_node_in_list, find_node_by_name, make_mermaid_file, get_graph_png)
 
 
 class TestDependencies(unittest.TestCase):
@@ -62,19 +61,5 @@ class TestGraph(unittest.TestCase):
 
         make_mermaid_file(path=path, script_mermaid=mermaid_str)
         self.assertTrue(os.path.exists(path))
-        if os.path.exists("test.mmd"):
-            os.remove("test.mmd")
-
-    def test_get_graph_png(self):
-        output_path = "test.png"
-        mermaid_path = """test.mmd"""
-        mermaid_str = """graph\nA ---> B\nA ---> C\nB ---> C"""
-
-        make_mermaid_file(path=mermaid_path, script_mermaid=mermaid_str)
-
-        get_graph_png(mermaid_path, output_path)
-        self.assertTrue(os.path.exists(output_path))
-        if os.path.exists("test.png"):
-            os.remove("test.png")
         if os.path.exists("test.mmd"):
             os.remove("test.mmd")

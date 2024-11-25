@@ -226,7 +226,7 @@ cd homework2
 
 Далее запускаем python-скрипт для запуска программы
 ```bash
-python src\dependencies_vis.py
+python src/dependencies_vis.py
 ```
 
 ---

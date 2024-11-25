@@ -1,5 +1,5 @@
 {
-    "program_path": "src/get_graph.py",
+    "program_path": "/usr/local/bin/mmdc",
     "package_name": "axios",
     "graph_output_path": "result/graph.png",
     "max_depth": 2
