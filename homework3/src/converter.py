@@ -50,7 +50,7 @@ class Parser:
 
 
     def find_all_constants(self):
-        pattern = r"var [_a-zA-Z]+ .+"
+        pattern = r"var [_a-zA-Z]+"
         matches = re.findall(pattern, self.text)
         for m in matches:
             const = m.split(" ")[1]
@@ -108,7 +108,7 @@ class Parser:
         val_matches = re.findall(val_pattern, array_string)
         for v_m in val_matches:
             if v_m[2:-1] not in self.res_dict.keys():
-                raise NameError("Переменная с таким именем не была объявлена")
+                raise NameError(f"{v_m}: Переменная с таким именем не была объявлена")
             else:
                 value = self.res_dict[v_m[2:-1]]
                 array_string = array_string.replace(v_m, str(value))
