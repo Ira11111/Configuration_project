@@ -4,7 +4,6 @@ import yaml
 import re
 
 
-
 class Parser:
     def __init__(self, text):
         self.text = text
@@ -20,13 +19,10 @@ class Parser:
             self.const_expr()
             self.get_arrays()
 
-            if self.check_text():
-                raise SyntaxError("В тексте языка были допущены синтаксические ошибки!")
-
         except Exception as e:
             return str(e)
         else:
-            self.make_yaml()
+            return self.make_yaml()
 
     def delete_comments(self):
         """Метод для удаления комментариев в тексте языка"""
@@ -47,8 +43,6 @@ class Parser:
                 s = "REM" + comments.pop(0)
                 self.text = self.text.replace(s, "")
 
-        if matches2 is not None:
-            comments.extend(matches2)
 
     def find_all_constants(self):
         pattern = r"var [_a-zA-Z]+ .+"
@@ -117,28 +111,20 @@ class Parser:
 
         return array_string
 
-    def check_text(self):
-        return self.text is None
-
     def make_yaml(self):
-        yaml_string = yaml.dump(self.res_dict, default_flow_style=False)  # default_flow_style=False делает вывод более читаемым
-        return yaml_string
+        yaml_output = yaml.dump(self.res_dict, sort_keys=False)
+        return yaml_output
 
-
-# var d 4
-# var f ${d}
-# var t [1, 2, [${f}, 3], ${d}]
 
 if __name__ == "__main__":
+    intput = ""
+    while True:
+        # получаем строку из потока стандартного ввода
+        line = sys.stdin.readline()
+        if not line:
+            break
+        intput += line
 
-    output = """var d 4\nvar f ${d}\nvar t [1, 2, [${f}, 3], ${d}] REM fds"""
-    # while True:
-    #     line = sys.stdin.readline()
-    #     if not line:
-    #         break
-    #     output += line
-
-    parser = Parser(output)
-    res = parser.parse()
-    print(parser.res_dict)
-    print(res)
+    parser = Parser(intput) # инициализируем парсер
+    res = parser.parse() # вызываем метод для обработки текста
+    print(res) # выводи результат в формате yaml
