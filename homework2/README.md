@@ -35,8 +35,6 @@
 
 ## 2. Описание всех функций и настроек
 
-### Программа для нахождения зависимостей и написания файла с разметкой
-
 #### `get_dependencies_current(package_name: str) -> Dict`
 ```Python
     def get_dependencies_current(package_name: str) -> Dict:
@@ -157,46 +155,45 @@
 
 ---
 
+#### `get_graph_png(prog_path: str, mermaid_path: str, output_file: str) -> None`
+```Python
+    def get_graph_png(prog_path: str, mermaid_path: str, output_file: str) -> None:
+    os.system(f"{prog_path} -i {mermaid_path} output -o {output_file} --puppeteerConfigFile config/graph_config.json")
+
+    if os.path.exists("src/mermaid.mmd"):
+        os.remove("src/mermaid.mmd")
+```
+- **Описание**: Преобразует файл разметки Mermaid в изображение
+- **Параметры**:
+  - `prog_path`: путь до программы отрисовки графа
+  - `mermaid_path`: путь до файла с разметкой mermaid
+  - `output_path`: путь к файлу с рисунком графа
+
+---
+
 #### `main()`
 ```Python
     def main():
-         with open("config/config.json", 'r') as conf_data:
-        data = json.load(conf_data)
-
-    dependencies = {}
-    get_all_dependencies(package_name=data["package_name"], depth=data["max_depth"], dep_dict=dependencies)
-
-    mermaid_script = get_mermaid_str(dependencies)
-
-    mermaid_path = "src/mermaid.mmd"
-    output_path = data["graph_output_path"]
-
-    make_mermaid_file(mermaid_path, mermaid_script)
-
-    p_path = data["program_path"]
-    os.system(f"python {p_path} --mf {mermaid_path} --of {output_path}")
+      with open("config/config.json", 'r') as conf_data:
+          data = json.load(conf_data)
+  
+      dependencies = {}
+      get_all_dependencies(package_name=data["package_name"], depth=data["max_depth"], dep_dict=dependencies)
+  
+      mermaid_script = get_mermaid_str(dependencies)
+  
+      mermaid_path = "src/mermaid.mmd"
+      output_path = data["graph_output_path"]
+  
+      make_mermaid_file(mermaid_path, mermaid_script)
+  
+      p_path = data["program_path"]
+      get_graph_png(prog_path=p_path, mermaid_path=mermaid_path, output_file=output_path)
 
     print("Программа выполнилась без ошибок!")
 ```
 - **Описание**: Основная функция. Осуществляет вызовы остальных функций и оперирует полученными данными.
 - **Параметры**: все параметры получает из файла конфигурации `./config/config.json`
-
----
-
-### Проргамма для получения изображения графа
-
-#### `get_graph_png(mermaid_str: str, output_path: str) -> None`
-```Python
-    def get_graph_png(mermaid_path: str, output_file: str) -> None:
-      os.system(f"mmdc -i {mermaid_path} output -o {output_file}")
-  
-      if os.path.exists("src/mermaid.mmd"):
-          os.remove("src/mermaid.mmd")
-```
-- **Описание**: Преобразует файл разметки Mermaid в изображение
-- **Параметры**:
-  - `mermaid_path`: путь до файла с разметкой mermaid
-  - `output_path`: путь к файлу с рисунком графа
 
 ---
 
