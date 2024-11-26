@@ -220,6 +220,10 @@ python src/converter.py
 ---
 
 ## 4. Пример использования в виде скриншотов
-
+Пример конфигурации базы данных
+![img_1](https://github.com/Ira11111/Configuration_project/blob/images/db_example.bmp)
+Пример конфигурации сервера
+![img_2](https://github.com/Ira11111/Configuration_project/blob/images/server_example.bmp)
 
 ## 5. Результаты прогона тестов
+![img_3](https://github.com/Ira11111/Configuration_project/blob/images/tests3.bmp)
