@@ -17,6 +17,7 @@ class Interpreter:
         while self.byte_code != 0:
             a = self.byte_code & ((1 << 7) - 1) # крайние справа 7 битов, соответствующие значению А
             self.byte_code >>= 7 # убираем значение А из битов
+
             match a:
                 case 36:
                     self.load_constant()
@@ -51,7 +52,7 @@ class Interpreter:
         C = self.byte_code & ((1 << 13) - 1)
         self.byte_code >>= 13
         D = self.byte_code & ((1 << 6) - 1)
-        self.byte_code >>= 16
+        self.byte_code >>= 15
 
         operand_address = C + D # расчет адреса операнда с учетом смещения
 
@@ -69,7 +70,7 @@ class Interpreter:
         self.byte_code >>= 13
 
         C = self.byte_code & ((1 << 13) - 1)
-        self.byte_code >>= 29
+        self.byte_code >>= 28
 
         if not (self.boundaries[0] <= B <= self.boundaries[1]):
             raise ValueError(
@@ -83,10 +84,12 @@ class Interpreter:
     def mul(self):
         B = self.byte_code & ((1 << 13) - 1)
         self.byte_code >>= 13
+
         C = self.byte_code & ((1 << 13) - 1)
         self.byte_code >>= 13
+
         D = self.byte_code & ((1 << 13) - 1)
-        self.byte_code >>= 16
+        self.byte_code >>= 15
 
         if not (self.boundaries[0] <= B <= self.boundaries[1]):
             raise ValueError(
@@ -117,15 +120,15 @@ class Interpreter:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("input", help="Входной бинарный файл")
-    parser.add_argument("output", help="Выходной XML файл")
+    parser.add_argument("--i", help="Входной бинарный файл")
+    parser.add_argument("--o", help="Выходной XML файл")
     parser.add_argument("-lb", "--left_boundary", help="Левая граница памяти", default=0)
     parser.add_argument("-rb", "--right_boundary", help="Правая граница памяти", default=8191)
     args = parser.parse_args()
 
-    interpreter = Interpreter(args.input, int(args.left_boundary), int(args.right_boundary), args.output)
+    interpreter = Interpreter(args.i, int(args.left_boundary), int(args.right_boundary), args.o)
     try:
         interpreter.interpret()
     except ValueError as e:
         print(e)
-    print(f"Интерпретация выполнена успешно. Результаты сохранены в {args.output}")
+    print(f"Интерпретация выполнена успешно. Результаты сохранены в {args.o}")
