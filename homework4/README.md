@@ -89,7 +89,7 @@
 
 Размер команды: 6 байт. 
 
-Первый операнд: значение в памяти по адресу, которым является значение в памяти по адресу, которым является поле D.
+Первый операнд: значение в памяти по адресу, которым является поле D.
 
 Второй операнд: значение в памяти по адресу, которым является поле C.
 
@@ -102,3 +102,401 @@
 ### Тестовая программа
 Выполнить поэлементно операцию умножение над двумя векторами длины 7.
 Результат записать в первый вектор.
+
+## 2. Описание всех функций и настроек
+### Класс Assembler
+
+#### `Assembler __init__(self, path_to_code, path_to_binary_file, path_to_log)
+```Python
+    def __init__(self, path_to_code, path_to_binary_file, path_to_log):
+        self.binary_file_path = path_to_binary_file
+        self.code_path = path_to_code
+        self.log_path = path_to_log
+
+        self.bytes = []
+        self.log_root = ET.Element("log")
+```
+- **Описание**: Конструктор класса, инициализирует пути до входного, выходного файлов и логов;
+массив для сохранения кодов команд; корень дерева логов
+- **Параметры**:
+  - `path_to_code`: путь до кода программы
+  - `path_to_binary_file`: путь до выходного бинарного файла
+  - `path_to_log`: путь до файла с логами
+---
+
+#### `load_constant`
+```Python
+    def load_constant(self, A, B, C):
+        # Кодирует команду LOAD_CONSTANT в байты
+        if (A != 36):
+            raise ValueError("Параметр А должен быть равен 36")
+        if not (0 <= B < (1 << 13)):
+            raise ValueError("Адрес B должен быть в пределах от 0 до 2^13-1")
+        if not (0 <= C < (1 << 28)):
+            raise ValueError("Константа C должна быть в пределах от 0 до 2^28-1")
+
+        bits = (C << 20) | (B << 7) | A
+        bits = bits.to_bytes(6, byteorder="little")
+
+        element = ET.SubElement(self.log_root, 'LOAD_CONSTANT')
+        element.attrib['A'] = str(A)
+        element.attrib['B'] = str(B)
+        element.attrib['C'] = str(C)
+        element.text = bits.hex()
+
+        return bits
+
+```
+- **Описание**: функция для кодирования операции загрузки константы в память
+- - **Параметры**:
+  - `А`: код команды
+  - `В`: адрес в памяти
+  - `С`: значение константы
+---
+
+#### `read_memory`
+```Python
+    def read_memory(self, A, B, C, D):
+        # Кодирует команду READ_MEMORY в байты
+        if (A != 58):
+            raise ValueError("Параметр А должен быть равен 58")
+        if not (0 <= B < (1 << 13)):
+            raise ValueError("Адрес B должен быть в пределах от 0 до 2^13-1")
+        if not (0 <= C < (1 << 13)):
+            raise ValueError("Адрес C должен быть в пределах от 0 до 2^13-1")
+        if not (0 <= D < (1 << 6)):
+            raise ValueError("Адрес D должен быть в пределах от 0 до 2^6-1")
+
+        bits = (D << 33) | (C << 20) | (B << 7) | A
+        bits = bits.to_bytes(6, byteorder="little")
+
+        element = ET.SubElement(self.log_root, 'READ_MEMORY')
+        element.attrib['A'] = str(A)
+        element.attrib['B'] = str(B)
+        element.attrib['C'] = str(C)
+        element.attrib['D'] = str(D)
+        element.text = bits.hex()
+
+        return bits
+
+```
+- **Описание**: функция для кодирования операции чтения константы из памяти
+- - **Параметры**:
+  - `А`: код команды
+  - `В`: адрес памяти
+  - `С`: адрес памяти
+  - `D`: смещение для адреса
+  - 
+---
+
+#### `write_memory`
+```Python
+    def write_memory(self, A, B, C):
+        # Кодирует команду WRITE_MEMORY в байты
+        if (A != 25):
+            raise ValueError("Параметр А должен быть равен 25")
+        if not (0 <= B < (1 << 13)):
+            raise ValueError("Адрес B должен быть в пределах от 0 до 2^13-1")
+        if not (0 <= C < (1 << 13)):
+            raise ValueError("Адрес C должен быть в пределах от 0 до 2^13-1")
+
+        bits = (C << 20) | (B << 7) | A
+        bits = bits.to_bytes(6, byteorder="little")
+
+        element = ET.SubElement(self.log_root, 'WRITE_MEMORY')
+        element.attrib['A'] = str(A)
+        element.attrib['B'] = str(B)
+        element.attrib['C'] = str(C)
+        element.text = bits.hex()
+
+        return bits
+
+```
+- **Описание**: функция для кодирования операции записи константы в память
+- - **Параметры**:
+  - `А`: код команды
+  - `В`: адрес в памяти
+  - `С`: адрес в памяти
+---
+
+#### `multiply`
+```Python
+    def multiply(self, A, B, C, D):
+        # Кодирует команду MUL в байты
+        if (A != 32):
+            raise ValueError("Параметр А должен быть равен 32")
+        if not (0 <= B < (1 << 13)):
+            raise ValueError("Адрес B должен быть в пределах от 0 до 2^13-1")
+        if not (0 <= C < (1 << 13)):
+            raise ValueError("Адрес C должен быть в пределах от 0 до 2^13-1")
+        if not (0 <= D < (1 << 13)):
+            raise ValueError("Адрес D должен быть в пределах от 0 до 2^13-1")
+
+        bits = (D << 33) | (C << 20) | (B << 7) | A
+        bits = bits.to_bytes(6, byteorder="little")
+
+        element = ET.SubElement(self.log_root, 'MUL')
+        element.attrib['A'] = str(A)
+        element.attrib['B'] = str(B)
+        element.attrib['C'] = str(C)
+        element.attrib['D'] = str(D)
+        element.text = bits.hex()
+
+        return bits
+```
+- **Описание**: функция для кодирования операции умножения констант
+- - **Параметры**:
+  - `А`: код команды
+  - `В`: адрес в памяти результата
+  - `С`: адрес первого операнда
+  - `D`: адрес второго операнда
+---
+
+#### `assemble`
+```Python
+        def assemble(self):
+        with open(self.code_path, "rt") as code:
+            for line in code:
+                line = line.split('\n')[0].strip()
+                if not line: continue
+
+                command, *args = line.split(" ")
+
+                if command == "LOAD_CONSTANT":
+                    if len(args) != 3:
+                        raise SyntaxError(
+                            f"{line}\nУ операции загрузки константы должно быть 3 аргумента")
+
+                    self.bytes.append(self.load_constant(int(args[0]), int(args[1]), int(args[2])))
+
+                elif command == "READ_MEMORY":
+                    if len(args) != 4:
+                        raise SyntaxError(
+                            f"{line}\nУ операции чтении из памяти должно быть 4 аргумента")
+
+                    self.bytes.append(self.read_memory(int(args[0]), int(args[1]), int(args[2]), int(args[3])))
+
+                elif command == "WRITE_MEMORY":
+                    if len(args) != 3:
+                        raise SyntaxError(
+                            f"{line}\nУ операции чтении из памяти должно быть 3 аргумента")
+
+                    self.bytes.append(self.write_memory(int(args[0]), int(args[1]), int(args[2])))
+
+                elif command == "MUL":
+                    if len(args) != 4:
+                        raise SyntaxError(
+                            f"{line}\nУ операции умножения должно быть 4 аргумента")
+
+                    self.bytes.append(self.multiply(int(args[0]), int(args[1]), int(args[2]), int(args[3])))
+
+                else:
+                    raise SyntaxError(f"{line}\nНеизвестная команда")
+
+        self.to_binary_file()
+
+        log_data = ET.tostring(self.log_root, encoding="unicode", method="xml").encode()
+        dom = xml.dom.minidom.parseString(log_data)
+        log = f'<?xml version="1.0" encoding="utf-8"?>\n' + dom.toprettyxml(newl="\n")[23:]
+        with open(self.log_path, 'w', encoding='utf-8') as f:
+            f.write(log)
+
+```
+- **Описание**: Считывает входной файл с кодом и обрабатывает команды в байты
+---
+
+#### `to_binary_file`
+```Python
+    def to_binary_file(self):
+        with open(self.binary_file_path, "wb") as binary:
+            for byte in self.bytes:
+                binary.write(byte)
+```
+- **Описание**: записывает результат кодирования в выходной файл
+---
+
+### Класс Interpreter
+
+#### `__init__(self, path_to_binary_file, left_boundary, right_boundary, path_to_result_file)
+```Python
+    def __init__(self, path_to_binary_file, left_boundary, right_boundary, path_to_result_file):
+        self.result_path = path_to_result_file
+        self.boundaries = (left_boundary, right_boundary) # порядковые номера крайних левого и правого регистров
+        # (адрес ячеек памяти)
+        self.registers = [0] * (right_boundary - left_boundary + 1) # количество регистров для команды
+
+        with open(path_to_binary_file, 'rb') as binary_file:
+            self.byte_code = int.from_bytes(binary_file.read(), byteorder="little")
+```
+- **Описание**: Конструктор класса, инициализирует путь логов; границы ячеек памяти
+и считывает кодировки команд для исполнения
+- **Параметры**:
+  - `path_to_binary_file`: путь до кода программы
+  - `left_boundary`: крайняя правая граница памяти
+  - `right_boundary`: крайняя левая граница файла
+  - `path_to_result_file`: путь до файла с логами
+---
+
+#### `load_constant`
+```Python
+    def load_constant(self):
+        B = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 13
+        C = self.byte_code & ((1 << 28) - 1)
+        self.byte_code >>= 28 
+        if not (self.boundaries[0] <= B <= self.boundaries[1]): 
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+
+        self.registers[B] = C
+
+```
+- **Описание**: функция для выполнения операции загрузки константы в память
+---
+
+#### `read_memory`
+```Python
+    def read_memory(self):
+       B = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 13
+        C = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 13
+        D = self.byte_code & ((1 << 6) - 1)
+        self.byte_code >>= 15
+
+        operand_address = C + D 
+
+        if not (self.boundaries[0] <= B <= self.boundaries[1]):
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+        if not (self.boundaries[0] <= operand_address <= self.boundaries[1]):
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+
+        self.registers[B] = self.registers[operand_address]
+
+```
+- **Описание**: функция для выполнения операции чтения константы из памяти
+
+---
+
+#### `write_memory`
+```Python
+    def write_memory(self):
+        B = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 13
+
+        C = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 28
+
+        if not (self.boundaries[0] <= B <= self.boundaries[1]):
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+        if not (self.boundaries[0] <= C <= self.boundaries[1]):
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+
+        self.registers[C] = self.registers[B]
+
+```
+- **Описание**: функция для выполнения операции записи константы в память
+---
+
+#### `mul
+```Python
+    def mul(self):
+        B = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 13
+
+        C = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 13
+
+        D = self.byte_code & ((1 << 13) - 1)
+        self.byte_code >>= 15
+
+        if not (self.boundaries[0] <= B <= self.boundaries[1]):
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+        if not (self.boundaries[0] <= C <= self.boundaries[1]):
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+        if not (self.boundaries[0] <= D <= self.boundaries[1]):
+            raise ValueError(
+                "В бинарном файле присутствуют невалидные данные: обращение к ячейки памяти по адресу вне диапазона")
+
+        self.registers[B] = self.registers[C] * self.registers[D]
+```
+- **Описание**: функция для выполнения операции умножения констант
+---
+
+#### `interpret`
+```Python
+    def interpret(self):
+        while self.byte_code != 0:
+            a = self.byte_code & ((1 << 7) - 1) # крайние справа 7 битов, соответствующие значению А
+            self.byte_code >>= 7 # убираем значение А из битов
+
+            match a:
+                case 36:
+                    self.load_constant()
+                case 58:
+                    self.read_memory()
+                case 25:
+                    self.write_memory()
+                case 32:
+                    self.mul()
+                case _:
+                    raise ValueError("В бинарном файле содержатся невалидные данные: неверный байт-код")
+
+        self.make_result()
+```
+- **Описание**: Выборка команды по ее коду
+---
+
+#### `make_result`
+```Python
+    def make_result(self):
+        result_root = ET.Element("result")
+        for pos, register in enumerate(self.registers, self.boundaries[0]):
+            if (register != 0):
+                element = ET.SubElement(result_root, "register")
+                element.attrib['address'] = str(pos)
+                element.text = str(register)
+
+        log_data = ET.tostring(result_root, encoding="unicode", method="xml").encode()
+        dom = xml.dom.minidom.parseString(log_data)
+        log = f'<?xml version="1.0" encoding="utf-8"?>\n' + dom.toprettyxml(newl="\n")[23:]
+        with open(self.result_path, 'w', encoding='utf-8') as f:
+            f.write(log)
+```
+- **Описание**: записывает результат выполнения команд в файл логов
+---
+
+---
+
+## 3. Описание команд для сборки проекта
+Для работы с проектом необходимо иметь установленный Python 3.12
+
+### Запуск проекта
+Сначала необходимо перейти в рабочую директорию ```homework2```.
+```bash
+cd homework3
+```
+
+Далее выполняем команду для запуска программы
+```bash
+python src/converter.py
+```
+
+---
+
+---
+
+## 4. Пример использования в виде скриншотов
+Пример конфигурации базы данных
+![img_1](https://github.com/Ira11111/Configuration_project/blob/images/db_example.bmp)
+Пример конфигурации сервера
+![img_2](https://github.com/Ira11111/Configuration_project/blob/images/server_example.bmp)
+
+## 5. Результаты прогона тестов
+![img_3](https://github.com/Ira11111/Configuration_project/blob/images/tests3.bmp)
