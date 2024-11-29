@@ -155,14 +155,14 @@ class Assembler:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("input", help="Входной файл (.asm)")
-    parser.add_argument("output", help="Выходной файл (.bin)")
-    parser.add_argument("-l", "--log", help="Файл лога (.xml)", default=None)
+    parser.add_argument("--i", help="Входной файл (.asm)", required=True)
+    parser.add_argument("--o", help="Выходной файл (.bin)", required=True)
+    parser.add_argument("--log", help="Файл лога (.xml)", default=None)
     args = parser.parse_args()
 
-    assembler = Assembler(args.input, args.output, args.log)
+    assembler = Assembler(args.i, args.o, args.log)
     try:
         assembler.assemble()
     except ValueError as e:
         print(e)
-    print(f"Ассемблирование выполнено успешно. Выходной файл: {args.output}")
+    print(f"Ассемблирование выполнено успешно. Выходной файл: {args.o}")
