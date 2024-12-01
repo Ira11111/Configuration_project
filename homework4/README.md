@@ -501,10 +501,11 @@ python src/interpreter.py --i <путь до входного бинарного
 ---
 
 ## 4. Пример использования в виде скриншотов
-Пример конфигурации базы данных
-![img_1](https://github.com/Ira11111/Configuration_project/blob/images/db_example.bmp)
-Пример конфигурации сервера
-![img_2](https://github.com/Ira11111/Configuration_project/blob/images/server_example.bmp)
+![img_1](https://raw.githubusercontent.com/Ira11111/Configuration_project/refs/heads/images/exmp41.bmp)
+![img_2](https://raw.githubusercontent.com/Ira11111/Configuration_project/refs/heads/images/exmp42.bmp)
+![img_3](https://raw.githubusercontent.com/Ira11111/Configuration_project/refs/heads/images/exmp43.bmp)
+![img_4](https://raw.githubusercontent.com/Ira11111/Configuration_project/refs/heads/images/exmp44.bmp)
 
 ## 5. Результаты прогона тестов
-![img_3](https://github.com/Ira11111/Configuration_project/blob/images/tests3.bmp)
+![img_5](https://raw.githubusercontent.com/Ira11111/Configuration_project/refs/heads/images/test4.bmp)
+![img_6](https://raw.githubusercontent.com/Ira11111/Configuration_project/refs/heads/images/test42.bmp)
